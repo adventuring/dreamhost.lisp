@@ -121,12 +121,12 @@ Possible errors 	(none)
 
 
 (defun dns-remove-record (name)
-"Commands
+  "Commands
 dns-remove_record
 
 Removes an existing editable DNS record you have with DreamHost.  However,
 you cannot remove dreamhosters.com records.  Keep in mind DNS changes may
-take a while to propagate. 
+take a while to propagate.
 
  Command dns-remove_record Values
 
@@ -154,7 +154,7 @@ internal_error_could_not_update_zone
 
 
 (defun register-dns-name (name ipv4-address)
-"- name: register DNS name
+  "- name: register DNS name
 
 shell: 'curl -X GET \"https://api.dreamhost.com/?key={{ api_key
 }}&type=A&unique_id={{ fqdn | to_uuid }}&cmd=dns-add_record&record={{ fqdn
