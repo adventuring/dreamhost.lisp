@@ -64,12 +64,12 @@ Adds  a  new  DNS record  to  a  domain  you  already have  hosted  with
 DreamHost.  However, you  cannot add  dreamhosters.com records.  Keep in
 mind DNS changes  may take a while to  propagate.
 
-\textbf{type}: A, CNAME, NS, PTR, NAPTR, SRV, TXT, or AAAA
+@b{type}: A, CNAME, NS, PTR, NAPTR, SRV, TXT, or AAAA
 
-\textbf{Result success:}
+@b{Result success:}
 record_added
 
-\textbf{Possible errors:}
+@b{Possible errors:}
 no_record
 no_type
 no_value
