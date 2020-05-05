@@ -30,7 +30,9 @@ https://panel.dreamhost.com/?tree=home.api")
 (define-condition internal-error-could-not-load-zone (dreamhost-api-error) ())
 (define-condition internal-error-could-not-add-record (dreamhost-api-error) ())
 (define-condition dreamhost-api-error-with-details (dreamhost-api-error)
-  ((details :initarg :details :reader dreamhost-error-details)))
+  ((details :initarg :details :reader dreamhost-error-details
+            :documentation "Details of the API error"))
+  (:documentation "A Dreamhost API error with associated details string"))
 (define-condition invalid-record (dreamhost-api-error-with-details) ())
 (define-condition invalid-type (dreamhost-api-error-with-details) ())
 (define-condition invalid-value (dreamhost-api-error-with-details) ())
@@ -66,28 +68,46 @@ mind DNS changes  may take a while to  propagate.
 
 @b{type}: A, CNAME, NS, PTR, NAPTR, SRV, TXT, or AAAA
 
-@b{Result success:}
+@subsection Result success
 record_added
 
-@b{Possible errors:}
+@subsection Possible Errors
+
+@itemize
+@item
 no_record
+@item
 no_type
+@item
 no_value
+@item
 invalid_record (may have specifics after a tab)
+@item
 invalid_type (may have specifics after a tab)
+@item
 invalid_value (may have specifics after a tab)
+@item
 no_such_zone
+@item
 CNAME_must_be_only_record
+@item
 CNAME_already_on_record
+@item
 record_already_exists_not_editable
+@item
 record_already_exists_remove_first
+@item
 internal_error_updating_zone
+@item
 internal_error_could_not_load_zone
-internal_error_could_not_add_record"
+@item
+internal_error_could_not_add_record
+
+@end itemize"
   (check-type type (member '(A CNAME NS PTR NAPTR SRV TXT AAAA)
                            :test #'string-equal))
   (check-type name string)
-  (let ((v (validate-dns-value (intern (string-upcase type) :keyword) value)))
+  (let ((v (validate-dns-value (make-keyword (string-upcase type)) value)))
     )
   )
 
@@ -100,9 +120,13 @@ on all accounts you have access to.  Please note that this skips the
 dreamhosters.com, dreamhost.com, dreamhostps.com, and newdream.net zones.
 
 Command 	dns-list_records
-Values 	(none)
-Result
 
+@subsection Result
+
+The result is a space-delimited table, which will be split on spaces
+into a list of plists.
+
+@verbatim
 success
 account_id zone record type value comment editable
 1 718apts.com 718apts.com A 1.2.3.4 0
@@ -112,10 +136,14 @@ account_id zone record type value comment editable
 1 718apts.com 718apts.com NS ns2.dreamhost.com. 0
 1 718apts.com 718apts.com NS ns3.dreamhost.com. 0
 1 718apts.com test.718apts.com CNAME ghs.google.com. A test I did. 1
-Possible values 	type : A,MX,NS,CNAME,PTR,NAPTR,TXT,SRV,AAAA, or A6
+@end verbatim
+
+Possible values
+
+type : A,MX,NS,CNAME,PTR,NAPTR,TXT,SRV,AAAA, or A6
 
 editable : 0 or 1
-Possible errors 	(none)
+
 ")
 
 
@@ -133,12 +161,15 @@ take a while to propagate.
 record : The full name of the record you'd like to remove, e.g., testing.groo.com
 type : The type (see dns-add_record) of the record you'd like to remove.
 value : The value (see dns-add_record) of the record you'd like to remove.
-Result
+
+@subsection Result
 
 success
 record_removed
-Possible errors
 
+@subsection Possible errors
+
+@verbatim
 no_record
 no_type
 no_value
@@ -148,13 +179,13 @@ no_such_value
 not_editable
 internal_error_could_not_destroy_record
 internal_error_could_not_update_zone
-
+@end verbatim
 ")
 
 
 
 (defun register-dns-name (name ipv4-address)
-  "- name: register DNS name
+  "Register DNS name NAME pointing to IPV4-ADDRESS.
 
 shell: 'curl -X GET \"https://api.dreamhost.com/?key={{ api_key
 }}&type=A&unique_id={{ fqdn | to_uuid }}&cmd=dns-add_record&record={{ fqdn
